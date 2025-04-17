@@ -1,5 +1,4 @@
-import { verify } from "../../utils/index.js";
-
+import { verify } from "../../../utils/index.js";
 export class ValidateTokenDto {
     constructor(data) {
         Object.assign(this, data);

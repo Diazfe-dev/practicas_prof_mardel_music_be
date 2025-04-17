@@ -1,4 +1,5 @@
-import { roles } from "../../common/constants.js";
+import { roles } from '../../../constants/constants.js';
+
 export class RegisterUserDto {
     constructor(data) {
         Object.assign(this, data);

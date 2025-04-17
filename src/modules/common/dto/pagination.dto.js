@@ -10,7 +10,7 @@ export class PaginationDto {
 
     validate() {
         const errors = [];
-        
+
         if (this.page && typeof this.page !== 'number') errors.push("Page must be a number.");
         if (this.page && this.page < 0) errors.push("Page must be greater than 0");
         if (this.limit && typeof this.limit !== 'number') errors.push("Limit must be a number.");

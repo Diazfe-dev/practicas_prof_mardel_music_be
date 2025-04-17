@@ -1,14 +1,11 @@
-export class RoleModel {
-    constructor(data) {
-        this.id = data.id;
-        this.name = data.name;
-    }
-}
+import { RepositoryBase } from "../repository.base.js";
 
-export class RoleRepository {
+export class RoleRepository extends RepositoryBase {
+
     table = 'Roles';
+
     constructor(connection) {
-        this.connection = connection;
+        super(connection);
     }
 
     async getAll() {

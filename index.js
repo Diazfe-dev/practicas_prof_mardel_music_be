@@ -1,5 +1,6 @@
-import app from "./src/app.js";
-import connection from "./src/database/mysql.db.js";
+import connection from './src/database/mysql.db.js';
+
+import app from './src/app.js';
 
 const boostrap = async () => {
   connection.connect()

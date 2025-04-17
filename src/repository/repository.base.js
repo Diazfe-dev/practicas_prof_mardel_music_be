@@ -1,4 +1,4 @@
-class RepositoryBase {
+export class RepositoryBase {
     constructor(connection) {
         this.connection = connection;
     }
@@ -13,5 +13,3 @@ class RepositoryBase {
 
     async delete(id) { }
 }
-
-export default RepositoryBase;

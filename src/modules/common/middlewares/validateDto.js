@@ -1,7 +1,5 @@
-export function validateDto(DtoClass, source, paramValue = "") {
-
+export function ValidateDto(DtoClass, source, paramValue = "") {
     return (req, res, next) => {
-        console.log("token",)
         const raw = source === "params"
             ? req.params[paramValue]
             : req.body;
