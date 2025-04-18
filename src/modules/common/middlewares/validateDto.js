@@ -1,20 +1,29 @@
-export function ValidateDto(DtoClass, source, paramValue = "") {
+import { DTO_SOURCE_BODY, DTO_SOURCE_PARAMS, DTO_SOURCE_QUERY } from "../../../constants/constants.js";
+
+export function ValidateDto(DtoClass, source, params = []) {
     return (req, res, next) => {
-        const raw = source === "params"
-            ? req.params[paramValue]
-            : req.body;
+        let dtoValues = {};
 
-        const dto = new DtoClass(source === "params" ? { [paramValue]: raw } : raw);
-
-        const errors = typeof dto.validate === "function" ? dto.validate() : [];
-
-        if (errors.length > 0) {
-            res.status(400).json({ message: "Validation failed", errors });
-            return;
+        if (source === DTO_SOURCE_PARAMS) {
+            for (const param of params) {
+                dtoValues[param] = req.params[param] ?? null;
+            }
+        } else if (source === DTO_SOURCE_QUERY) {
+            for (const param of params) {
+                dtoValues[param] = req.query[param] ?? null;
+            }
+        } else {
+            dtoValues = req.body;
         }
 
-        req.validated = dto;
+        const dto = new DtoClass(dtoValues);
+        const errors = typeof dto.validate === 'function' ? dto.validate() : [];
 
+        if (errors.length > 0) {
+            return res.status(400).json({ message: "Validation failed", errors });
+        }
+
+        req.validated = { ...req.validate, ...dto }
         next();
     };
 }

@@ -9,6 +9,8 @@ import { RoleRepository } from "../../repository/auth/role.repository.js";
 import { AuthService } from "./auth.service.js";
 import { AuthController } from "./auth.controller.js";
 import { LoginUserDto, RegisterUserDto, ValidateTokenDto } from "./dto/index.js";
+import { DTO_SOURCE_PARAMS, DTO_SOURCE_BODY } from '../../constants/constants.js';
+
 
 const userRepository = new UserRepository(connection);
 const roleRepository = new RoleRepository(connection);
@@ -17,10 +19,8 @@ const controller = new AuthController(authService);
 
 const AuthRouter = express.Router();
 
-AuthRouter.get("/login", ValidateDto(LoginUserDto, "body"), controller.login);
-
-AuthRouter.post("/register", ValidateDto(RegisterUserDto, "body"), controller.register);
-
-AuthRouter.get("/verifyToken/:token", ValidateDto(ValidateTokenDto, "params", "token"), controller.verifyToken);
+AuthRouter.get("/login", ValidateDto(LoginUserDto, DTO_SOURCE_BODY), controller.login);
+AuthRouter.post("/register", ValidateDto(RegisterUserDto, DTO_SOURCE_BODY), controller.register);
+AuthRouter.get("/verifyToken/:token", ValidateDto(ValidateTokenDto, DTO_SOURCE_PARAMS, ["token"]), controller.verifyToken);
 
 export default AuthRouter;
