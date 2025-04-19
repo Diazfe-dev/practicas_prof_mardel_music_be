@@ -8,7 +8,7 @@ import { RoleRepository } from "../../../repository/auth/role.repository.js";
 const userRepository = new UserRepository(connection);
 const roleRepository = new RoleRepository(connection);
 
-export function RoleGuard(role) {
+export function RoleGuard(...allowedRoles) {
     return async (req, res, next) => {
         try {
             const token = req.headers.authorization;
@@ -23,16 +23,13 @@ export function RoleGuard(role) {
             const userRole = await roleRepository.get(user.role_id);
             if (!userRole) throw new Error("Unauthorized");
 
-            const tokenRole = await roleRepository.get(role_id);
-            if (!tokenRole) throw new Error("Unauthorized");
-
-            if (userRole.role !== role) throw new Error("Unauthorized");
-            if (tokenRole.role !== role) throw new Error("Unauthorized");
+            if (!allowedRoles.includes(userRole.role)) {
+                throw new Error("Unauthorized");
+            }
 
             next();
-        }
-        catch (error) {
+        } catch (error) {
             return errorResponse(req, res, `[Invalid Role]: ${error.message}`, 401);
         }
-    }
+    };
 }

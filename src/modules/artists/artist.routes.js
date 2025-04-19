@@ -11,7 +11,12 @@ import { PaginationDto } from '../common/dto/pagination.dto.js';
 import { CreateArtistDto } from './dto/create-artist.dto.js';
 import { UpdateArtistDto } from './dto/update-artist.dto.js';
 import { AuthGuard, RoleGuard } from '../common/middlewares/index.js';
-import { ROLE_USER_TAG, DTO_SOURCE_BODY, DTO_SOURCE_PARAMS, DTO_SOURCE_QUERY } from '../../constants/constants.js';
+import {
+    ROLE_USER_TAG,
+    DTO_SOURCE_BODY,
+    DTO_SOURCE_PARAMS,
+    DTO_SOURCE_QUERY
+} from '../../constants/constants.js';
 
 const artistRepository = new ArtistRepository(connection);
 const artistService = new ArtistService(artistRepository);

@@ -9,9 +9,15 @@ export class UserController {
     getAll = async (req, res) => {
         try {
             const validated = req.validated;
-            const users = await this.userService.getAll(validated);
-            if (!users) return errorResponse(req, res, 'Users not found', 404);
-            return successResponse(req, res, users, 200);
+            const result = await this.userService.getAll(validated);
+            if (!result) return errorResponse(req, res, 'Users not found', 404);
+            const { meta, data } = result;
+
+            data.forEach(user => {
+                delete user.password;
+            });
+
+            return successResponse(req, res, "Users found", { meta, data }, 200);
         }
         catch (error) {
             console.log(error);
@@ -24,7 +30,10 @@ export class UserController {
             const { id } = req.validated;
             const user = await this.userService.getUserById(id);
             if (!user) return errorResponse(req, res, 'User not found', 404);
-            return successResponse(req, res, user, 200);
+
+            delete user.password;
+
+            return successResponse(req, res, "User found", user, 200);
         } catch (error) {
             console.log(error);
             return errorResponse(req, res, error.message, 500);
@@ -32,20 +41,36 @@ export class UserController {
     }
 
     getByEmail = async (req, res) => {
-        const user = await this.userService.getByEmail(req.params.email);
-        if (!user) return errorResponse(req, res, 'User not found', 404);
-        return successResponse(req, res, user, 200);
+        try {
+            const { email } = req.validated;
+            const user = await this.userService.getByEmail(email);
+            if (!user) return errorResponse(req, res, 'User not found', 404);
+
+            delete user.password;
+
+            return successResponse(req, res, "User found", user, 200);
+        }
+        catch (error) {
+            console.log(error);
+            return errorResponse(req, res, error.message, 500);
+        }
     }
 
     update = async (req, res) => {
         try {
-            const userExists = await this.userService.getByEmail(req.validated.email);
+            const { id } = req.validated;
+            const userExists = await this.userService.getUserById(id);
+
             if (!userExists) return errorResponse(req, res, 'User not found', 404);
 
             const user = await this.userService.update(req.params.id, req.validated);
             if (!user) return errorResponse(req, res, 'User not found', 404);
 
-            return successResponse(req, res, user, 200);
+            const updatedUser = await this.userService.getUserById(id);
+
+            delete updatedUser.password;
+
+            return successResponse(req, res, "User updated successfully", { updatedUser }, 200);
         }
         catch (error) {
             console.log(error);
@@ -61,7 +86,7 @@ export class UserController {
             const user = await this.userService.create(req.validated);
             if (!user) return errorResponse(req, res, 'User not found', 404);
 
-            return successResponse(req, res, user, 200);
+            return successResponse(req, res, `User with email ${user.email} created successfully`, user, 200);
         }
         catch (error) {
             console.log(error);
@@ -71,10 +96,14 @@ export class UserController {
 
     delete = async (req, res) => {
         try {
-            const user = await this.userService.delete(req.params.id);
-            if (!user) return errorResponse(req, res, 'User not found', 404);
+            const { id } = req.validated;
+            const userExists = await this.userService.getUserById(id);
+            if (!userExists) return errorResponse(req, res, `User with id: ${id} not found`, 404);
 
-            return successResponse(req, res, user, 200);
+            const user = await this.userService.delete(id);
+            if (!user) return errorResponse(req, res, `Error while deleting user with id: ${id}`, 404);
+
+            return successResponse(req, res, `User with id: ${id} was deleted successfully`, _, 200);
         }
         catch (error) {
             console.log(error);

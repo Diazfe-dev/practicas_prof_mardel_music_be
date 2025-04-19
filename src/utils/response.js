@@ -1,4 +1,9 @@
-export const successResponse = (req, res, message = '', data, statusCode = 200) => {
+export const successResponse = (
+    req,
+    res,
+    message = '',
+    data,
+    statusCode = 200) => {
     res.status(statusCode).json({
         status: statusCode,
         error: false,
