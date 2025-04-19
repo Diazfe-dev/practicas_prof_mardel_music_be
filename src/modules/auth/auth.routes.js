@@ -19,8 +19,22 @@ const controller = new AuthController(authService);
 
 const AuthRouter = express.Router();
 
-AuthRouter.get("/login", ValidateDto(LoginUserDto, DTO_SOURCE_BODY), controller.login);
-AuthRouter.post("/register", ValidateDto(RegisterUserDto, DTO_SOURCE_BODY), controller.register);
-AuthRouter.get("/verifyToken/:token", ValidateDto(ValidateTokenDto, DTO_SOURCE_PARAMS, ["token"]), controller.verifyToken);
+AuthRouter.get(
+    "/login",
+    ValidateDto(LoginUserDto, DTO_SOURCE_BODY),
+    controller.login
+);
+
+AuthRouter.post(
+    "/register",
+    ValidateDto(RegisterUserDto, DTO_SOURCE_BODY),
+    controller.register
+);
+
+AuthRouter.get(
+    "/verifyToken/:token",
+    ValidateDto(ValidateTokenDto, DTO_SOURCE_PARAMS, ["token"]),
+    controller.verifyToken
+);
 
 export default AuthRouter;

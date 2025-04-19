@@ -8,7 +8,7 @@ export class UserService {
         return await this.userRepository.getAll(pagination);
     }
 
-    getById = async (id) => {
+    getUserById = async (id) => {
         return await this.userRepository.get(id);
     }
 

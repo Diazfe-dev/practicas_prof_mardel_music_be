@@ -34,8 +34,7 @@ export class UserRepository extends RepositoryBase {
 
     async get(id) {
         const [row] = await this.connection.query(
-            `SELECT * FROM ${this.table} WHERE id = ?`,
-            [id]
+            `SELECT * FROM ${this.table} WHERE id = ?`, [id]
         );
         return row[0];
     }

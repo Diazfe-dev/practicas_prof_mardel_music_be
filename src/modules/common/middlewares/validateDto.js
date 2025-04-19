@@ -23,7 +23,7 @@ export function ValidateDto(DtoClass, source, params = []) {
             return res.status(400).json({ message: "Validation failed", errors });
         }
 
-        req.validated = { ...req.validate, ...dto }
+        req.validated = { ...req.validated, ...dto }
         next();
     };
 }
